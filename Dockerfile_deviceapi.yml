@@ -1,0 +1,9 @@
+# Dockerfile_deviceapi
+FROM golang:latest
+
+WORKDIR /go/src/app
+COPY . .  
+
+RUN go build -o deviceapi main.go
+  
+CMD ["./deviceapi"]
