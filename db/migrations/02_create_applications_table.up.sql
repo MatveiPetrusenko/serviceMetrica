@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS applications (
     id SERIAL PRIMARY KEY,
-    username_id SERIAL NOT NULL REFERENCES users (id),
+    user_id INTEGER NOT NULL REFERENCES users (id),
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    api_key TEXT UNIQUE NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL
+    api_key TEXT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
-CREATE INDEX idx_api_key ON applications (api_key);
+
+--- applications_api_key_idx ---
+CREATE UNIQUE INDEX applications_api_key_idx ON applications (api_key);

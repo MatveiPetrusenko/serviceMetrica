@@ -1,9 +1,9 @@
-CREATE TYPE event AS ENUM ('user_actions', 'ad_actions', 'social_actions');
 CREATE TABLE IF NOT EXISTS events (
     id SERIAL PRIMARY KEY,
-    application_id SERIAL NOT NULL REFERENCES applications (id),
-    type_event event NOT NULL,
-    attribute JSONB NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL
+    application_id INTEGER NOT NULL REFERENCES applications (id),
+    type_event TEXT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
-CREATE INDEX idx_created_at ON events (created_at);
+
+--- events_type_event_idx ---
+CREATE INDEX events_type_event_idx ON events (type_event);

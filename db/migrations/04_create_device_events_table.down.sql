@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS device_events CASCADE;
 DROP INDEX IF EXISTS events_type_event_idx CASCADE;
