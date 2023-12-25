@@ -1,4 +1,4 @@
-package internalservice
+package Internal
 
 import (
 	"net/http"

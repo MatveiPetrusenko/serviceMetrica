@@ -1,4 +1,4 @@
-package device_service
+package device
 
 import "net/http"
 

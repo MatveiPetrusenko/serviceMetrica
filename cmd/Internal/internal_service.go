@@ -1,4 +1,4 @@
-package internalservice
+package Internal
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"serviceMetrica/config"
+	"serviceMetrica/internal/config"
 	"time"
 )
 
@@ -30,13 +30,13 @@ func RunInternalService() {
 	router.Handle("/get/events", getAggregatedDataHandler)
 
 	server := &http.Server{
-		Addr:    config.New().HostInternal + ":" + config.New().PortInternal,
+		Addr:    config.New().Service.Host + ":" + config.New().Service.Port,
 		Handler: router,
 	}
 
 	// Start the server in a goroutine
 	go func() {
-		log.Printf("Internal Service listening on: %v\n", config.New().HostInternal+":"+config.New().PortInternal)
+		log.Printf("Internal Service listening on: %v\n", config.New().Service.Port+":"+config.New().Service.Port)
 		if err := server.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}

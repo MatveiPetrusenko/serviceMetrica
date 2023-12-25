@@ -1,4 +1,4 @@
-package device_service
+package device
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"serviceMetrica/config"
+	"serviceMetrica/internal/config"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -22,13 +22,13 @@ func RunDeviceService() {
 	router.Handle("/events", deviceAPIMiddleware.AuthMiddleware(http.HandlerFunc(deviceAPIHandler.SendEventHandler))).Methods("POST")
 
 	server := &http.Server{
-		Addr:    config.New().HostDevice + ":" + config.New().PortDevice,
+		Addr:    config.New().Device.Host + ":" + config.New().Device.Port,
 		Handler: router,
 	}
 
 	// Запуск HTTP-сервера в отдельной горутине
 	go func() {
-		log.Printf("Device Service listening on: %v\n", config.New().HostDevice+":"+config.New().PortDevice)
+		log.Printf("Device Service listening on: %v\n", config.New().Device.Host+":"+config.New().Device.Port)
 		if err := server.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}

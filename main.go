@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"serviceMetrica/config"
-	"serviceMetrica/device_service"
-	internalservice "serviceMetrica/internal_service"
+	main2 "serviceMetrica/cmd/Internal"
+	main1 "serviceMetrica/cmd/device"
+	"serviceMetrica/internal/config"
 )
 
 func main() {
@@ -13,8 +13,8 @@ func main() {
 		log.Fatalf("Config error: %v\n", err)
 	}
 
-	go internalservice.RunInternalService()
-	go device_service.RunDeviceService()
+	go main1.RunDeviceService()
+	go main2.RunInternalService()
 	for {
 	}
 }

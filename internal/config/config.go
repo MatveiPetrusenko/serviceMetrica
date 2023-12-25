@@ -3,11 +3,9 @@ package config
 import (
 	"fmt"
 	"os"
+	"serviceMetrica/internal/sub_config"
 	"sync"
 	"time"
-
-	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/go-ozzo/ozzo-validation/is"
 
 	"gopkg.in/yaml.v3"
 )
@@ -19,26 +17,15 @@ var instanceConfig *Config
 var onceConfig sync.Once // onceConfig
 
 type Config struct {
-	HostInternal string `yaml:"hostInternal"`
-	PortInternal string `yaml:"portInternal"`
-
-	HostDevice string `yaml:"hostDevice"`
-	PortDevice string `yaml:"portDevice"`
+	Service *sub_config.ServiceConfig
+	Device  *sub_config.DeviceConfig
+	DB      *sub_config.DBConfig
 
 	JwtToken struct {
 		Secret    string        `yaml:"secret"`
 		Issuer    string        `yaml:"issuer"`
 		ExpiresAt time.Duration `yaml:"expiresAt"`
 	} `yaml:"jwtToken"`
-
-	PostgreSQL struct {
-		User     string `yaml:"user"`
-		Password string `yaml:"password"`
-		DbName   string `yaml:"bdName"`
-		SSLMode  string `yaml:"sslMode"`
-		Host     string `yaml:"host"`
-		Port     string `yaml:"port"`
-	} `yaml:"postgreSQL"`
 }
 
 // New return New.Config
@@ -67,16 +54,18 @@ func (config *Config) Load() error {
 		return fmt.Errorf("Error unmarshal config file: %v\n", err)
 	}
 
-	return config.validation()
-}
+	validators := []Validator{
+		config.Service,
+		config.Device,
+		config.DB,
+	}
 
-// Validation ...
-func (config *Config) validation() error {
-	err := validation.ValidateStruct(
-		config, //  field #0 must be specified as a pointer
-		validation.Field(&config.HostInternal, is.Host, validation.Required),
-		validation.Field(&config.PortInternal, is.Port, validation.Required),
-	)
+	for _, v := range validators {
+		err = v.Validation()
+		if err != nil {
+			return err
+		}
+	}
 
-	return err
+	return nil
 }
