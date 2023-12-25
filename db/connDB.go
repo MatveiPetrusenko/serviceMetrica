@@ -25,12 +25,12 @@ func New() *sql.DB {
 // ConnectToDB connect to database
 func ConnectToDB() (*sql.DB, error) {
 	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s host=%s port=%s",
-		config.New().PostgreSQL.User,
-		config.New().PostgreSQL.Password,
-		config.New().PostgreSQL.DbName,
-		config.New().PostgreSQL.SSLMode,
-		config.New().PostgreSQL.Host,
-		config.New().PostgreSQL.Port)
+		config.New().DB.Host,
+		config.New().DB.Password,
+		config.New().DB.DbName,
+		config.New().DB.SSLMode,
+		config.New().DB.Host,
+		config.New().DB.Port)
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {

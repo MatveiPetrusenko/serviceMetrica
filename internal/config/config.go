@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"serviceMetrica/internal/sub_config"
 	"sync"
@@ -20,6 +21,7 @@ type Config struct {
 	Device  sub_config.DeviceConfig  `env:"DEVICE"`
 	DB      sub_config.DBConfig      `env:"DB"`
 	Token   sub_config.JwtToken      `env:"JWT_TOKEN"`
+	Auth    sub_config.Auth          `env:"AUTHENTICATION"`
 }
 
 // New return New.Config
@@ -42,6 +44,8 @@ func (config *Config) Load() error {
 	if err != nil {
 		log.Fatalf("Unable to parse environment variables: %s\n", err)
 	}
+
+	fmt.Println(config)
 
 	// Checking errors for each sub structure
 	validators := []Validator{
