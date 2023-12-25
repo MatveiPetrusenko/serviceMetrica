@@ -6,8 +6,8 @@ import (
 )
 
 type ServiceConfig struct {
-	Host string `yaml:"hostDevice"`
-	Port string `yaml:"portDevice"`
+	Host string `env:"HOST_SERVICE"`
+	Port string `env:"PORT_SERVICE"`
 }
 
 // Validation ...

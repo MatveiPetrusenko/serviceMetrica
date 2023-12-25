@@ -5,12 +5,12 @@ import (
 )
 
 type DBConfig struct {
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	DbName   string `yaml:"bdName"`
-	SSLMode  string `yaml:"sslMode"`
-	Host     string `yaml:"host"`
-	Port     string `yaml:"port"`
+	User     string `env:"DB_USER"`
+	Password string `env:"DB_PASSWORD"`
+	DbName   string `env:"DB_NAME"`
+	SSLMode  string `env:"DB_SSL_MODE"`
+	Host     string `env:"DB_HOST"`
+	Port     string `env:"DB_PORT"`
 }
 
 // Validation ...

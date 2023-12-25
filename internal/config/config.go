@@ -1,31 +1,25 @@
 package config
 
 import (
-	"fmt"
-	"os"
+	"log"
 	"serviceMetrica/internal/sub_config"
 	"sync"
-	"time"
 
-	"gopkg.in/yaml.v3"
+	"github.com/caarlos0/env/v6"
+	"github.com/joho/godotenv"
 )
 
-const EnvConfigFile = "CONFIG_PATH"
+const EnvConfigFile = "./.env"
 
 var instanceConfig *Config
 
 var onceConfig sync.Once // onceConfig
 
 type Config struct {
-	Service *sub_config.ServiceConfig
-	Device  *sub_config.DeviceConfig
-	DB      *sub_config.DBConfig
-
-	JwtToken struct {
-		Secret    string        `yaml:"secret"`
-		Issuer    string        `yaml:"issuer"`
-		ExpiresAt time.Duration `yaml:"expiresAt"`
-	} `yaml:"jwtToken"`
+	Service sub_config.ServiceConfig `env:"SERVICE"`
+	Device  sub_config.DeviceConfig  `env:"DEVICE"`
+	DB      sub_config.DBConfig      `env:"DB"`
+	Token   sub_config.JwtToken      `env:"JWT_TOKEN"`
 }
 
 // New return New.Config
@@ -39,25 +33,22 @@ func New() *Config {
 
 // Load ...
 func (config *Config) Load() error {
-	var configPath = os.Getenv(EnvConfigFile)
-	if configPath == "" {
-		configPath = "config/config.yml"
-	}
-
-	yamlFile, err := os.ReadFile(configPath)
+	err := godotenv.Load(EnvConfigFile)
 	if err != nil {
-		return fmt.Errorf("Failed to open file: %v\n", err)
+		log.Fatalf("Unable to load .env file: %s\n", err)
 	}
 
-	err = yaml.Unmarshal(yamlFile, config)
+	err = env.Parse(config)
 	if err != nil {
-		return fmt.Errorf("Error unmarshal config file: %v\n", err)
+		log.Fatalf("Unable to parse environment variables: %s\n", err)
 	}
 
+	// Checking errors for each sub structure
 	validators := []Validator{
-		config.Service,
-		config.Device,
-		config.DB,
+		&config.Service,
+		&config.Device,
+		&config.DB,
+		&config.Token,
 	}
 
 	for _, v := range validators {

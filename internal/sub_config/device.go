@@ -6,8 +6,8 @@ import (
 )
 
 type DeviceConfig struct {
-	Host string `yaml:"hostDevice"`
-	Port string `yaml:"portDevice"`
+	Host string `env:"HOST_DEVICE"`
+	Port string `env:"PORT_DEVICE"`
 }
 
 // Validation ...
